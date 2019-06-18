@@ -7,7 +7,10 @@
 
 namespace Openbitapp\LZW;
 
-class LZW
+use Illuminate\Contracts\Support\Jsonable;
+use Illuminate\Contracts\Support\Arrayable;
+
+class LZW implements Jsonable, Arrayable
 {
     protected $data;
 
@@ -67,10 +70,22 @@ class LZW
     /**
      * Return the compressed data as array
      *
+     * @return array
      */
     public function toArray()
     {
-        return $this->data;
+        return $this->data ?? [];
+    }
+
+    /**
+     * Return the compressed data as array
+     *
+     * @param  int  $options
+     * @return string
+     */
+    public function toJson($options = 0)
+    {
+        return json_encode($this->data ?? [], $options);
     }
 
     /**
@@ -115,5 +130,15 @@ class LZW
         }
 
         return $result;
+    }
+
+    /**
+     * Return the compressed data as string
+     * 
+     * @return string
+     */
+    public function __toString(): string
+    {
+        return $this->toString();
     }
 }
