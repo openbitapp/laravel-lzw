@@ -9,14 +9,15 @@ namespace Openbitapp\LZW;
 
 class LZW
 {
+    protected $data;
 
     /**
      * Compress the given string using LZW Algorithm
      *
      * @param string $unc
-     * @return string
+     * @return self
      */
-    public function compress(string $unc): string
+    public function compress(string $unc)
     {
         $w = '';
         $dictionary = [];
@@ -34,28 +35,56 @@ class LZW
             if (array_key_exists($w . $c, $dictionary)) {
                 $w = $w . $c;
             } else {
-                array_push($result, $dictionary[$w]);
+                $result[] = $dictionary[$w];
                 $dictionary[$wc] = $dictSize++;
                 $w = (string) $c;
             }
         }
 
         if ($w !== '') {
-            array_push($result, $dictionary[$w]);
+            $result[] = $dictionary[$w];
         }
 
-        return implode(',', $result);
+        $this->data = $result;
+
+        return $this;
+    }
+
+    /**
+     * Return the compressed data as string
+     * 
+     * @return string
+     */
+    public function toString(): string
+    {
+        if (empty($this->data)) {
+            return '';
+        }
+
+        return implode(',', $this->data);
+    }
+
+    /**
+     * Return the compressed data as array
+     *
+     */
+    public function toArray()
+    {
+        return $this->data;
     }
 
     /**
      * Decompress the given string using LZW Algorithm
      *
-     * @param string $unc
+     * @param string|array $unc
      * @return string
      */
-    public function decompress(string $com): string
+    public function decompress($com): string
     {
-        $com = explode(',', $com);
+        if (!is_array($com)) {
+            $com = explode(',', $com);
+        }
+
         $dictionary = [];
         $entry = '';
         $dictSize = 256;
@@ -67,7 +96,7 @@ class LZW
         $w = chr($com[0]);
         $result = $w;
 
-        for ($i = 1; $i < count($com);$i++) {
+        for ($i = 1; $i < count($com); $i++) {
             $k = $com[$i];
 
             if ($dictionary[$k]) {
