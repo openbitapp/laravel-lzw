@@ -1,5 +1,7 @@
 <?php
 
+namespace Openbitapp\LZW;
+
 use Illuminate\Support\Facades\Facade;
 
 class LZWFacade extends Facade
