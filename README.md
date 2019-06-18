@@ -13,7 +13,7 @@ You can install the package via composer:
 composer require openbitapp/laravel-lzw
 ```
 
-The package registers itself and his facade automatically in Laravel 5.5 or above.
+The package registers itself and his facade automatically.
 
 ## Usage
 
